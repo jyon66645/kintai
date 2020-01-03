@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails',        '~> 5.1.6'
-gem 'rails-i18n' #日本語化対応
+gem 'rails-i18n'
 gem 'bootstrap-sass'
 gem 'bcrypt' #password_digestを使ってパスワードをハッシュ化する際に必要
 gem 'faker' # ユーザー作成
@@ -30,9 +30,6 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
-
-
-
 
 
 

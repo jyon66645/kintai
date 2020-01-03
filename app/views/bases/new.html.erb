@@ -1,0 +1,20 @@
+<h1>拠点情報追加</h1>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <%= form_with(model: @base, url: user_bases_path, method: :post, local: true) do |f| %>
+     
+      <%= f.label :base_name %>
+      <%= f.text_field :base_name, class: "form-control" %>
+      
+      <%= f.label :base_kind %>
+      <%= f.text_field :base_kind, class: "form-control" %>
+      
+      <%= f.label :base_number %>
+      <%= f.number_field :base_number, class: "form-control" %>
+       
+      
+      <%= f.submit "新規登録", class: "btn btn-primary btn-new-task"  %>
+    <% end %>
+  </div>
+</div>
