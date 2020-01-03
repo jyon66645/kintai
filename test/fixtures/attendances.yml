@@ -1,0 +1,53 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  worked_on: 2020-01-03
+  started_at: 2020-01-03 08:27:54
+  finished_at: 2020-01-03 08:27:54
+  note: MyString
+  user_id: 1
+  finish_schedule_time: 2020-01-03 08:27:54
+  business_process: MyText
+  tomorrow: false
+  confirmation: MyString
+  approval: MyString
+  change_checkbox: false
+  approval_attendance: MyString
+  confirmation_attendance: MyString
+  after_started_at: 2020-01-03 08:27:54
+  after_finished_at: 2020-01-03 08:27:54
+  after_note: MyString
+  zokucho_approval: MyString
+  zokucho_confirmation: MyString
+  zokucho_day: 2020-01-03
+  zokucho_box: false
+  log_started_at: 2020-01-03 08:27:54
+  log_finished_at: 2020-01-03 08:27:54
+  log_approval: MyString
+  user: one
+
+two:
+  worked_on: 2020-01-03
+  started_at: 2020-01-03 08:27:54
+  finished_at: 2020-01-03 08:27:54
+  note: MyString
+  user_id: 1
+  finish_schedule_time: 2020-01-03 08:27:54
+  business_process: MyText
+  tomorrow: false
+  confirmation: MyString
+  approval: MyString
+  change_checkbox: false
+  approval_attendance: MyString
+  confirmation_attendance: MyString
+  after_started_at: 2020-01-03 08:27:54
+  after_finished_at: 2020-01-03 08:27:54
+  after_note: MyString
+  zokucho_approval: MyString
+  zokucho_confirmation: MyString
+  zokucho_day: 2020-01-03
+  zokucho_box: false
+  log_started_at: 2020-01-03 08:27:54
+  log_finished_at: 2020-01-03 08:27:54
+  log_approval: MyString
+  user: two

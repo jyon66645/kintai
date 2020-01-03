@@ -1,0 +1,47 @@
+<header class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container">
+        <%= link_to "Attendance App", '#', id: "logo" %>
+        <nav>
+          <ul class="nav navbar-nav navbar-right">
+            <li><%= link_to "トップへ", root_path %></li>
+
+            <% unless logged_in? %>
+              <li><%= link_to "ログイン", login_path %></li>
+            <% end %>
+            <% if logged_in? && current_user.admin? %>
+              <li><%= link_to "ユーザー一覧", users_path %></li>
+            
+              <li><%= link_to "出勤社員一覧", attendances_working_users_user_path(current_user) %></li>
+              <li><%= link_to "拠点情報の修正", user_bases_path(current_user) %></li>
+              <li><%= link_to "基本情報の更新", basic_infomation_edit_user_path(current_user) %></li>
+            
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  Account<b class="caret"></b>
+                </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "設定", edit_user_path(current_user) %></li>
+                <li class="divider"></li>
+                <li><%= link_to "ログアウト", logout_path, method: :delete %></li>
+              </ul>
+              </li>
+           <% elsif logged_in? %>
+             <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  Account<b class="caret"></b>
+                </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "勤怠情報", user_path(current_user) %></li>
+                <li><%= link_to "設定", edit_user_path(current_user) %></li>
+                <li class="divider"></li>
+                <li><%= link_to "ログアウト", logout_path, method: :delete %></li>
+              </ul>
+              </li>
+           <% end %>
+            
+              
+            
+          </ul>
+        </nav>
+      </div>
+    </header>
