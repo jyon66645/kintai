@@ -1,0 +1,34 @@
+<h1>勤怠ログ<%= l(@first_day, format: :middle) %></h1>
+
+<div class="log_month_btn">
+  <%= link_to "⇦前月へ", log_edit_user_path(date: @first_day.prev_month), class: "btn btn-primary btn-xs" %>
+  <%= link_to "次月へ⇨", log_edit_user_path(date: @first_day.next_month), class: "btn btn-primary btn-xs" %>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th class="center">日付</th>
+        <th class="center">変更前出社時間</th>
+        <th class="center">変更前退社時間</th>
+        <th class="center">変更後出社時間</th>
+        <th class="center">変更後退社時間</th>
+        <th class="center">指示者</th>
+        <th class="center">承認</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @attendances.where.not(log_approval: nil).each do |day| %>
+        <tr>
+          <td><%= l(day.worked_on.to_date, format: :long) %></td>
+          <td><%= day.log_started_at.strftime("%H:%M") if day.log_started_at.present? %></td>
+          <td><%= day.log_finished_at.strftime("%H:%M") if day.log_finished_at.present? %></td>
+          <td><%= day.after_started_at.strftime("%H:%M") if day.after_started_at.present?%></td>
+          <td><%= day.after_finished_at.strftime("%H:%M") if day.after_finished_at.present? %></td>
+          <td><%= day.confirmation_attendance %></td>
+          <td><%= day.log_approval.to_date if day.log_approval.present? %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

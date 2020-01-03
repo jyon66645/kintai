@@ -1,0 +1,112 @@
+<% provide(:title, @user.name) %>
+<h1><%= @user.name %></h1>
+
+<div>
+  <table class="table table-bordered table-condensed user-table">
+    <tr>
+      <td>
+      <%= l(@first_day, format: :middle) %> : 勤怠管理表 
+      </td>
+      <td>
+        "指定勤務開始時間 : <%= format_basic_info(@user.designated_work_start_time) %>"
+        <br>
+        "指定勤務終了時間 : <%= format_basic_info(@user.designated_work_end_time) %>"
+      </td>
+      <td colspan="3">基本時間 : <%= format_basic_info(@user.basic_work_time) %></td>
+      <td>初日 : <%= l(@last_day, format: :short) %></td>
+    </tr>
+    
+    <tr>
+      <td>所属 : <%= @user.affiliation.present? ? @user.affiliation : "未所属" %></td>
+      <td>氏名 : <%= @user.name %></td>
+      <td>コード</td>
+      <td></td>
+      <td>出勤日数 : <%= @worked_sum %></td>
+      <td>締め : <%= l(@last_day, format: :short) %></td>
+    </tr>
+  </table>
+</div>
+
+<div>
+  <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+    <thead>
+      <tr>
+        <td rowspan="3">残業申請</td>
+        <td rowspan="3">日付</td>
+        <td rowspan="3">曜日</td>
+        <td colspan="8">実績</td>
+        <td colspan="5">所定外勤務</td>
+      </tr>
+      <tr>
+        <td colspan="3">出社</td>
+        <td colspan="3">退社</td>
+        <td rowspan="2">在社時間</td>
+        <td rowspan="2">備考</td>
+        <td colspan="2">終了予定時間</td>
+        <td rowspan="2">時間外時間</td>
+        <td rowspan="2">業務処理内容</td>
+        <td rowspan="2">指示者確認㊞</td>
+      </tr>
+      <tr>
+        <td>時</td>
+        <td>分</td>
+        <td></td>
+        <td>時</td>
+        <td>分</td>
+        <td></td>
+        <td>時</td>
+        <td>分</td>
+        
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @attendances.each do |day| %>
+        <tr>
+          <td></td>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td><%= day.started_at.hour if day.started_at.present? %></td>
+          <td><%= day.started_at.min if day.started_at.present? %></td>
+          <td>
+            <% day.started_at if day.started_at.present? %>
+          </td>
+          <td><%= day.finished_at.hour if day.finished_at.present? %></td>
+          <td><%= day.finished_at.min if day.finished_at.present? %></td>
+          <td>
+            <% day.finished_at if day.started_at.present? && day.finished_at.present? %>
+          </td>
+          <td>
+            <% if day.started_at.present? && day.finished_at.present? %>
+              <%= str_times = working_times(day.started_at, day.finished_at) %>
+              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+            <% end %>
+          </td>
+          <td><%= day.note %></td>
+          <td><%= day.finish_schedule_time.hour if day.finish_schedule_time.present? %></td> <!-- 終了予定時間 : 時 -->
+          <td><%= day.finish_schedule_time.min if day.finish_schedule_time.present? %></td> <!-- 終了予定時間 : 分 -->
+          <% if day.tomorrow? %>
+            <td><%= format_basic_info_plus(day.finish_schedule_time).to_f - format_basic_info(@user.designated_work_end_time).to_f if day.finish_schedule_time.present? && @user.designated_work_end_time.present? %></td>
+          <% else %>
+            <td><%= format_basic_info(day.finish_schedule_time).to_f - format_basic_info(@user.designated_work_end_time).to_f if day.finish_schedule_time.present? && @user.designated_work_end_time.present? %></td>
+          <% end %>
+          <td><%= day.business_process %></td> <!-- 業務処理内容 -->
+          <td><%= "残業:#{day.approval}:#{name_change(day.confirmation)}" if day.confirmation.present? %></td> <!-- 指示者確認㊞ -->
+        </tr>
+      <% end %>
+    </tbody>
+    
+    <tfoot>
+      <tr>
+        <td colspan="2"></td>
+        <td colspan="6"></td>
+        <td></td>
+        <td>在社合計時間 : <%= format("%.2f", @total_working_times.to_f) %></td>
+        <td colspan="5"></td>
+        <td>
+          所属長承認: 
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

@@ -1,0 +1,57 @@
+<% provide(:title, "All Users") %>
+<% provide(:class_text, 'user--edit') %>
+<% provide(:button_text, '更新') %>
+
+<h1>ユーザー一覧</h1>
+
+<div class="row">
+  <div class="col col-md-10 col-md-offset-1">
+    
+  <%= will_paginate %>
+  
+<div class="row">
+  <div class="col-md-4">
+    <%= form_tag import_users_path, multipart: true do %>
+      <%= file_field_tag :file %>
+      <%= submit_tag "インポート", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
+      </div>
+  </div>
+  
+  <% @users.each do |user| %>
+    <p><%= user.name %></p>
+    <div class="user-delete-area">
+      <% if current_user.admin? && !current_user?(user) %>
+        <%= link_to "削除", user, method: :delete,
+            data: { confirm: "#{user.name}を削除してよろしいですか？" },
+            class: "btn btn-primary" %>
+      <% end %>
+    </div>
+    <div class="user-edit-area">
+      <div class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a data-toggle="collapse" href="#collapse<%= user.id %>">
+              <button type="submit" class="btn btn-primary">編集</button>
+            </a>
+          </div>
+          <div class="collapse" id="collapse<%= user.id %>">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <%= render partial: 'index_form', locals: { user: user } %>
+                </div>
+              </div>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+  
+  <% end %>
+  
+  <%= will_paginate %>
+  </div>
+</div>

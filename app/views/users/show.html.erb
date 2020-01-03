@@ -1,0 +1,202 @@
+<% provide(:title, @user.name) %>
+<h1><%= @user.name %></h1>
+
+<div>
+  <table class="table table-bordered table-condensed user-table">
+    <tr>
+      <td><%= link_to "⇦前月へ", user_path(date: @first_day.prev_month), class: "btn btn-primary btn-xs" %>
+      <%= l(@first_day, format: :middle) %> : 勤怠管理表 : <%= link_to "次月へ", user_path(date: @first_day.next_month), class: "btn btn-primary btn-xs" %>
+      </td>
+      <td>
+        "指定勤務開始時間 : <%= format_basic_info(@user.designated_work_start_time) %>"
+        <br>
+        "指定勤務終了時間 : <%= format_basic_info(@user.designated_work_end_time) %>"
+      </td>
+      <td colspan="3">基本時間 : <%= format_basic_info(@user.basic_work_time) %></td>
+      <td>初日 : <%= l(@last_day, format: :short) %></td>
+    </tr>
+    
+    <tr>
+      <td>所属 : <%= @user.affiliation.present? ? @user.affiliation : "未所属" %></td>
+      <td>氏名 : <%= @user.name %></td>
+      <td>コード</td>
+      <td></td>
+      <td>出勤日数 : <%= @worked_sum %></td>
+      <td>締め : <%= l(@last_day, format: :short) %></td>
+    </tr>
+  </table>
+</div>
+
+<!-- superior_user_1の場合 -->
+<% if current_user.id == 2 %>
+  <% if @test.present? && @test.where(confirmation: "Superior User-1", approval: "申請中") && approval_count > 0 %> <!-- 終了予定時間の値を持っている & 残業申請中の数が0より上ならtrueを返す -->
+    <p><%= link_to "【残業申請のお知らせ】", edit_overtime_notice_user_path(@user), remote: true, class: "overtime_class" %><span class="span_class"><%= "#{approval_count}件の通知があります" %></span></p>
+  <% else %>
+    <p>【残業申請のお知らせ】</p>
+  <% end %>
+  
+  <% if after_approbal_count > 0 %>
+   <p><%= link_to "【勤怠申請のお知らせ】", edit_attendance_apply_user_path(@user), remote: true, class: "overtime_class" %><span class="span_class"><%= "#{after_approbal_count}件の通知があります" %></span></p>
+  <% else %>
+    <p>【勤怠申請のお知らせ】</p>
+  <% end %>
+  
+  <% if shozokucho_approval_count > 0 %>
+    <p><%= link_to "【所属長承認申請のお知らせ】", edit_zokucho_user_path(@user), remote: true, class: "overtime_class" %><span class="span_class"><%= "#{ @user = Attendance.where(zokucho_approval: "申請中", zokucho_confirmation: "上長1").count}件の通知があります" %></span></p>
+  <% else %>
+    <p>【所属長承認申請のお知らせ】</p>
+  <% end %>
+<% end %>
+
+<!-- superior_user_2の場合 -->
+<% if current_user.id == 3%>
+  <% if @test.present? && @test.where(confirmation: "Superior User-2", approval: "申請中") && approval_count_plus > 0 %> <!-- 終了予定時間の値を持っている & 残業申請中の数が0より上ならtrueを返す -->
+    <%= link_to "【残業申請のお知らせ】", edit_overtime_notice_user_path(date: @user_plus), remote: true, class: "overtime_class" %><span class="span_class"><%= "#{approval_count_plus}件の通知があります" %></span>
+  <% else %>
+    <p>【残業申請のお知らせ】</p>
+  <% end %>
+  
+  <% if after_approbal_count_plus > 0 %>
+   <p><%= link_to "【勤怠申請のお知らせ】", edit_attendance_apply_user_path(@user), remote: true, class: "overtime_class" %><span class="span_class"><%= "#{after_approbal_count_plus}件の通知があります" %></span></p>
+  <% else %>
+    <p>【勤怠申請のお知らせ】</p>
+  <% end %>
+  
+  <% if shozokucho_approval_count_plus > 0 %>
+    <p><%= link_to "【所属長承認申請のお知らせ】", edit_zokucho_user_path(@user), remote: true, class: "overtime_class" %><span class="span_class"><%= "#{ @user = Attendance.where(zokucho_approval: "申請中", zokucho_confirmation: "上長2").count}件の通知があります" %></span></p>
+  <% else %>
+    <p>【所属長承認申請のお知らせ】</p>
+  <% end %>
+<% end %>
+
+<p>
+  <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
+  <%= link_to "勤怠修正ログ(承認済)", log_edit_user_path, class: "btn btn-primary" %>
+  <%= link_to "CSV出力", user_path(format: :csv, date: @first_day), class: "btn btn-primary" %>
+</p>
+
+<div>
+  <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+    <thead>
+      <tr>
+        <td rowspan="3">残業申請</td>
+        <td rowspan="3">日付</td>
+        <td rowspan="3">曜日</td>
+        <td colspan="8">実績</td>
+        <td colspan="5">所定外勤務</td>
+      </tr>
+      <tr>
+        <td colspan="3">出社</td>
+        <td colspan="3">退社</td>
+        <td rowspan="2">在社時間</td>
+        <td rowspan="2">備考</td>
+        <td colspan="2">終了予定時間</td>
+        <td rowspan="2">時間外時間</td>
+        <td rowspan="2">業務処理内容</td>
+        <td rowspan="2">指示者確認㊞</td>
+      </tr>
+      <tr>
+        <td>時</td>
+        <td>分</td>
+        <td></td>
+        <td>時</td>
+        <td>分</td>
+        <td></td>
+        <td>時</td>
+        <td>分</td>
+        
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @attendances.each do |day| %>
+        <tr>
+          <td><%= link_to "残業申請", user_edit_overtime_path(current_user, day, params: { day: day.worked_on, wday: $days_of_the_week[day.worked_on.wday] }), remote: true, class: "btn btn-primary" %></td>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td><%= day.started_at.hour if day.started_at.present? %></td>
+          <td><%= day.started_at.min if day.started_at.present? %></td>
+          <td>
+            <% if (Date.current == day.worked_on) && day.started_at.nil? %>
+              <%= link_to "出勤登録", user_attendance_path(current_user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+            <% end %>
+          </td>
+          <td><%= day.finished_at.hour if day.finished_at.present? %></td>
+          <td><%= day.finished_at.min if day.finished_at.present? %></td>
+          <td>
+            <% if (Date.current == day.worked_on) && day.started_at.present? && day.finished_at.nil? %>
+              <%= link_to "退勤登録", user_attendance_path(current_user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+            <% end %>
+          </td>
+          <td>
+            <% if day.started_at.present? && day.finished_at.present? %>
+              <%= str_times = working_times(day.started_at, day.finished_at) %>
+              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+            <% end %>
+          </td>
+          <td><%= day.after_note %></td>
+          <td><%= day.finish_schedule_time.hour if day.finish_schedule_time.present? %></td> <!-- 終了予定時間 : 時 -->
+          <td><%= day.finish_schedule_time.min if day.finish_schedule_time.present? %></td> <!-- 終了予定時間 : 分 -->
+          <% if day.tomorrow? %>
+            <td><%= format_basic_info_plus(day.finish_schedule_time).to_f - format_basic_info(current_user.designated_work_end_time).to_f if day.finish_schedule_time.present? && current_user.designated_work_end_time.present? %></td>
+         
+          <% else %>
+            <td><%= format_basic_info(day.finish_schedule_time).to_f - format_basic_info(current_user.designated_work_end_time).to_f if day.finish_schedule_time.present? && current_user.designated_work_end_time.present? %></td>
+          <% end %>
+           
+          <td><%= day.business_process %></td> <!-- 業務処理内容 -->
+          <td>
+            <%= "残業:#{day.approval}:#{name_change(day.confirmation)}" if day.confirmation.present? %><br>
+            <%= "勤怠:#{day.approval_attendance}:#{day.confirmation_attendance}" if day.confirmation_attendance.present? && day.confirmation_attendance == "上長1" %>
+            <%= "勤怠:#{day.approval_attendance}:#{day.confirmation_attendance}" if day.confirmation_attendance.present? && day.confirmation_attendance == "上長2" %>
+          </td> <!-- 指示者確認㊞ -->
+        </tr>
+        <% end %>
+    </tbody>
+    
+    
+    <tfoot>
+         
+      
+        <tr>
+          <td colspan="2"></td><!--総合勤務時間表示-->
+          <td colspan="6"></td>
+          <td></td>
+          <td>在社合計時間 : <%= format("%.2f", @total_working_times.to_f) %></td>
+          <td colspan="5"></td>
+          <td>
+            <%= form_for(current_user, url: attendances_update_zokucho_approval_user_path(date: @first_day), method: :patch) do |f| %>
+              
+              <%= f.fields_for :attendances do |attendance| %>
+                  所属長承認 : <%= current_user.attendances.find_by(worked_on: @first_day).zokucho_confirmation %><br>
+                  <% if current_user.attendances.find_by(worked_on: @first_day).zokucho_approval.present? %>
+                    <%= current_user.attendances.find_by(worked_on: @first_day).zokucho_approval %> <br>
+                  <% else %>  
+                    未申請<br>
+                  <% end %>
+                <% if current_user.id == 2 %>
+                  <%= attendance.select :zokucho_confirmation, [name_change('Superior User-2')], include_blank: true %><br>
+                <% else %>
+                  <%= attendance.select :zokucho_confirmation, [name_change('Superior User-1')], include_blank: true %><br>
+                <% end %>
+              <% end %>
+             
+             <%= f.submit "申請", class: "btn btn-primary" %>
+           <% end %>
+          </td>
+        </tr>
+    
+    </tfoot>
+  </table>
+</div>
+
+
+<!--モーダルウインドウ表示-->
+
+<div id="edit-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!--残業申請-->
+<div id="edit-overtime-notice" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!--勤怠申請-->
+<div id="edit-attendance-apply" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!--所属長承認申請-->
+<div id="edit-zokucho" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

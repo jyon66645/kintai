@@ -1,0 +1,56 @@
+<% provide(:title, @user.name) %>
+
+<%= form_with(model: @user, url: attendances_update_one_month_user_path(date: @first_day), local: true, method: :patch) do |f| %>
+<div>
+  <h1>勤怠情報編集</h1>
+  <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
+    <thead>
+      <tr>
+        <th>日付</th>
+        <td>曜日</td>
+        <td>出社</td>
+        <td>退社</td>
+        <td>翌日</td>
+        
+        <td>備考</td>
+        <td>指示者確認㊞</td>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @attendances.each do |day| %>
+        <%= f.fields_for "attendances[]", day do |attendance| %>
+        <tr>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+         
+          <% if !current_user.admin? && (Date.current < day.worked_on)  %>
+            <td><%= day.started_at.strftime("%H:%M") + " →" if day.started_at.present? %><%= attendance.time_field :after_started_at, class: "form-control" %></td>
+            <td><%= day.finished_at.strftime("%H:%M") + " →" if day.started_at.present? %><%= attendance.time_field :after_finished_at, class: "form-control" %></td>
+          <% else %>
+            <td><%= day.started_at.strftime("%H:%M") + " →" if day.started_at.present? %><%= attendance.time_field :after_started_at, class: "form-control" %></td>
+            <td><%= day.finished_at.strftime("%H:%M") + " →" if day.finished_at.present? %><%= attendance.time_field :after_finished_at, class: "form-control" %></td>
+          <% end %>
+    
+            <td><%= attendance.check_box :tomorrow %></td>
+            
+          <td><%= attendance.text_field :note, class: "form-control" %></td>
+          <% if current_user.id == 2 %>
+            <td><%= attendance.select :confirmation_attendance, [name_change('Superior User-2')], include_blank: true %></td>
+          <% else %>
+            <td><%= attendance.select :confirmation_attendance, [name_change('Superior User-1')], include_blank: true %></td>
+          <% end %>  
+          
+          
+        </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="center">
+  <%= f.submit "まとめて申請", class: "btn btn-lg btn-primary" %>
+  <%= link_to "キャンセル", user_path(date: @first_day), class: "btn btn-lg btn-default" %>
+</div>
+<% end %>

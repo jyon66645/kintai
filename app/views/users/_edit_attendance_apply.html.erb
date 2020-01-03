@@ -1,0 +1,149 @@
+<% provide(:class_text, 'basic-info') %>
+<% provide(:button_text, '更新') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h1 class="modal-title">勤怠申請</h1>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          
+          <% if current_user.id == 2 %>
+          
+          <%= form_with(model: @user, url: update_attendance_apply_user_path(@user), local: true, method: :patch) do |f| %>
+          <% @users.each do |user| %>
+          <p><h3 class="center">【<%= user.name %>】</h3></p>
+          
+          <table class="table table-bordered table-condensed table-hover table-striped">
+            <thead>
+              <tr>
+                <th class="center" rowspan="3">日付</th>
+                <th class="center" rowspan="3">曜日</th>
+                <th class="center" colspan="4">変更前</th>
+                <th class="center" colspan="4">変更後</th>
+                <th class="center" rowspan="3">備考</th>
+                <th class="center" rowspan="3">指示者確認</th>
+                <th class="center" rowspan="3">変更</th>
+                <th class="center" rowspan="3">勤怠を確認する</th>
+              </tr>
+              <tr>
+                <th class="center" colspan="2">出社</th>
+                <th class="center" colspan="2">退社</th>
+                <th class="center" colspan="2">出社</th>
+                <th class="center" colspan="2">退社</th>
+              </tr>
+              <tr>
+                <th class="center">時</th>
+                <th class="center">分</th>
+                <th class="center">時</th>
+                <th class="center">分</th>
+                <th class="center">時</th>
+                <th class="center">分</th>
+                <th class="center">時</th>
+                <th class="center">分</th>
+              </tr>
+            </thead>
+            <% user.attendances.where(approval_attendance: "申請中", confirmation_attendance: "上長1").each do |at| %>
+            <%= f.fields_for "attendances[]", at do |attendance| %>
+      
+            <tbody>
+              <tr>
+                <td><%= l(at.worked_on, format: :short) %></td>
+                <td><%= $days_of_the_week[at.worked_on.wday] %></td>
+                <td><%= at.started_at.hour if at.started_at.present? %></td>
+                <td><%= at.started_at.min if at.started_at.present? %></td>
+                <td><%= at.finished_at.hour if at.finished_at.present? %></td>
+                <td><%= at.finished_at.min if at.finished_at.present? %></td>
+                <td><%= at.after_started_at.hour if at.after_started_at.present? %></td> 
+                <td><%= at.after_started_at.min if at.after_started_at.present? %></td>
+                <td><%= at.after_finished_at.hour if at.after_finished_at.present? %></td>
+                <td><%= at.after_finished_at.min if at.after_finished_at.present? %></td>
+                <td><%= at.after_note %></td>
+                <td><%= attendance.select :approval_attendance, ['申請中', '承認', '否認'] %></td>
+                <td><%= attendance.check_box :change_checkbox, {}, true, false %></td>
+                <td><%= link_to "確認", show_view_only_path(user), class: "btn btn-primary", target: ":_blank" %></td>
+              </tr>
+             </tbody>
+            <% end %>
+             <% end %>
+          </table>
+         
+          <% end %>
+           <%= f.submit "許可", class: "btn btn-primary btn-block" %>
+          <% end %>
+          
+          <% elsif current_user.id == 3 %>
+          
+          <%= form_with(model: @user, url: update_attendance_apply_user_path(@user), local: true, method: :patch) do |f| %>
+          <% @users_plus.each do |user| %>
+          <p><h3 class="center">【<%= user.name %>】</h3></p>
+          
+          <table class="table table-bordered table-condensed table-hover table-striped">
+            <thead>
+              <tr>
+                <th class="center" rowspan="3">日付</th>
+                <th class="center" rowspan="3">曜日</th>
+                <th class="center" colspan="4">変更前</th>
+                <th class="center" colspan="4">変更後</th>
+                <th class="center" rowspan="3">備考</th>
+                <th class="center" rowspan="3">指示者確認</th>
+                <th class="center" rowspan="3">変更</th>
+                <th class="center" rowspan="3">勤怠を確認する</th>
+              </tr>
+              <tr>
+                <th class="center" colspan="2">出社</th>
+                <th class="center" colspan="2">退社</th>
+                <th class="center" colspan="2">出社</th>
+                <th class="center" colspan="2">退社</th>
+              </tr>
+              <tr>
+                <th class="center">時</th>
+                <th class="center">分</th>
+                <th class="center">時</th>
+                <th class="center">分</th>
+                <th class="center">時</th>
+                <th class="center">分</th>
+                <th class="center">時</th>
+                <th class="center">分</th>
+              </tr>
+            </thead>
+            <% user.attendances.where(approval_attendance: "申請中", confirmation_attendance: "上長2").each do |at| %>
+            <%= f.fields_for "attendances[]", at do |attendance| %>
+      
+            <tbody>
+              <tr>
+                <td><%= l(at.worked_on, format: :short) %></td>
+                <td><%= $days_of_the_week[at.worked_on.wday] %></td>
+                <td><%= at.started_at.hour if at.started_at.present? %></td>
+                <td><%= at.started_at.min if at.started_at.present? %></td>
+                <td><%= at.finished_at.hour if at.finished_at.present? %></td>
+                <td><%= at.finished_at.min if at.finished_at.present? %></td>
+                <td><%= at.after_started_at.hour if at.after_started_at.present? %></td> 
+                <td><%= at.after_started_at.min if at.after_started_at.present? %></td>
+                <td><%= at.after_finished_at.hour if at.after_finished_at.present? %></td>
+                <td><%= at.after_finished_at.min if at.after_finished_at.present? %></td>
+                <td><%= at.after_note %></td>
+                <td><%= attendance.select :approval_attendance, ['申請中', '承認', '否認'] %></td>
+                <td><%= attendance.check_box :change_checkbox, {}, true, false %></td>
+                <td><%= link_to "確認", show_view_only_path(user), class: "btn btn-primary", target: ":_blank" %></td>
+              </tr>
+             </tbody>
+            <% end %>
+             <% end %>
+          </table>
+         
+          <% end %>
+           <%= f.submit "許可", class: "btn btn-primary btn-block" %>
+          <% end %>
+          
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
