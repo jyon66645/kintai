@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   # ログイン済みのユーザーか確認します。
   def logged_in_user
     unless logged_in?
-      store_location
+    store_location
       flash[:danger] = "ログインしてください。"
       redirect_to login_url
     end
@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   # システム管理権限所有かどうか判定します。
   def admin_user
     unless current_user.admin?
-    flash[:danger] = "管理権限がありません"
+    flash.now[:danger] = "管理権限がありません"
     redirect_to root_url 
     end
   end

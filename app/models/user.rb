@@ -22,6 +22,8 @@ class User < ApplicationRecord
   validates :designated_work_start_time, presence: true
   validates :designated_work_end_time, presence: true
   
+  
+  
 
   
   has_secure_password      
@@ -82,7 +84,5 @@ class User < ApplicationRecord
   # name,    email,       affiliation,employee_number,uid,basic_time,designated_work_start_time,designated_work_end_time,superior,admin,password
   # 濱本　亮,e5@gmail.com,フリーランス,1,1,9:00,10:00,19:00,1,FALSE,password
   
-  def test
-    errors.add(:zokucho_confirmation, "の値が入っていません") if zokucho_confirmation.present?
-  end
+  
 end

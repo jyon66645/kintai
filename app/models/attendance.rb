@@ -19,6 +19,7 @@ class Attendance < ApplicationRecord
   validate :finished_at_is_invalid_without_a_started_at
   validate :confirmation_attendance_validate
   validate :confirmation_attendance_validate_plus
+  validate :test_test
 
   def finish_schedule_time_validate
     if finish_schedule_time.present? && user.designated_work_end_time.present? && !tomorrow?
@@ -58,5 +59,18 @@ class Attendance < ApplicationRecord
      end
    end
   end
+  
+  def test_test
+    # strftimeで"時","分"だけのデータを取得して > で比較。strftimeで指定していないと日付の情報まで入ってしまうのでおかしくなる。
+    # designated_work_end_time はdefaultで2019/12/01,17:00になっている。
+    # tomorrowはチェックが入っていた場合の時間に対応する為に定義。
+    if finish_schedule_time.present? && user.designated_work_end_time.present?
+      if (user.designated_work_end_time.strftime("%H:%M") > finish_schedule_time.strftime("%H:%M")) && !tomorrow? 
+        errors.add(:designated_work_end_time, "より早い終了予定時間は無効です")
+      end
+    end
+  end
+  
+  
   
 end
