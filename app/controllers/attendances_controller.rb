@@ -44,7 +44,12 @@ class AttendancesController < ApplicationController
       after_attendances_params.each do |id, item|
         attendance = Attendance.find(id)
         attendance.update_attributes!(item)
-        attendance.update_attributes(approval_attendance: "申請中")
+        if attendance.tomorrow?
+          attendance.after_finished_at.tomorrow if attendance.after_finished_at.present?
+          attendance.update_attributes(approval_attendance: "申請中")
+        else
+          attendance.update_attributes(approval_attendance: "申請中")
+        end
       end
     end
      flash[:success] = "1ヶ月分の勤怠情報を申請しました。"

@@ -129,9 +129,16 @@
             <% end %>
           </td>
           <td>
-            <% if day.started_at.present? && day.finished_at.present? %>
-              <%= str_times = working_times(day.started_at, day.finished_at) %>
-              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+            <% if day.tomorrow? %>
+              <% if day.started_at.present? && day.finished_at.present? %>
+                <%= str_times = working_times_plus(day.started_at, day.finished_at) %>
+                <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+              <% end %>
+            <% else %>
+              <% if day.started_at.present? && day.finished_at.present? %>
+                <%= str_times = working_times(day.started_at, day.finished_at) %>
+                <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+              <% end %>
             <% end %>
           </td>
           <td><%= day.after_note %></td>

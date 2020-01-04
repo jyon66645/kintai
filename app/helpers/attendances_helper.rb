@@ -6,6 +6,10 @@ module AttendancesHelper
     format("%.2f", (((finish - start) / 60) / 60.0))
   end
   
+  def working_times_plus(start, finish)
+    format("%.2f", (((finish.tomorrow - start) / 60) / 60.0))
+  end
+  
   def name_change(superior_name)
     if superior_name == "Superior User-2"
       superior_name = "上長2"
