@@ -72,7 +72,11 @@
 <p>
   <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
   <%= link_to "勤怠修正ログ(承認済)", log_edit_user_path, class: "btn btn-primary" %>
+<% if current_user.attendances.where(worked_on: @first_day, zokucho_approval: "承認").present? %>
   <%= link_to "CSV出力", user_path(format: :csv, date: @first_day), class: "btn btn-primary" %>
+<% else %>
+  <a class="btn btn-primary btn-csv-export disabled">CSV出力</a>
+<% end %>
 </p>
 
 <div>

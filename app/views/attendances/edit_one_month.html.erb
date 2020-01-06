@@ -36,9 +36,9 @@
             
           <td><%= attendance.text_field :note, class: "form-control" %></td>
           <% if current_user.id == 2 %>
-            <td><%= attendance.select :confirmation_attendance, [name_change('Superior User-2')], include_blank: true %></td>
+            <td><%= attendance.select :confirmation_attendance, [name_change('Superior User-2')], include_blank: true, selected: nil %></td>
           <% else %>
-            <td><%= attendance.select :confirmation_attendance, [name_change('Superior User-1')], include_blank: true %></td>
+            <td><%= attendance.select :confirmation_attendance, [name_change('Superior User-1')], include_blank: true, selected: nil %></td>
           <% end %>  
           
           

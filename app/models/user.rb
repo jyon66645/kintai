@@ -67,6 +67,7 @@ class User < ApplicationRecord
   end
   
   def self.import(file)
+    if file.present? 
     CSV.foreach(file.path, headers: true, encoding: "Windows-31J:UTF-8") do |row|
       # IDが見つかれば、レコードを呼び出し、見つかれなければ、新しく作成
       user = find_by(id: row["id"]) || new
@@ -74,6 +75,10 @@ class User < ApplicationRecord
       user.attributes = row.to_hash.slice(*updatable_attributes)
       # 保存する
       user.save
+    end
+    else
+      
+     
     end
   end
 

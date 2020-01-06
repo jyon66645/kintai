@@ -5,8 +5,13 @@ class ApplicationController < ActionController::Base
   $days_of_the_week = %w{日 月 火 水 木 金 土}
 
   # beforフィルター
-  
    
+  def current_user_only
+    unless current_user?(@user)
+      flash[:danger] = "他のユーザーのページにはアクセス出来ません"
+      redirect_to login_url
+    end
+  end
   
   def set_current_user
     @current_user = User.find(session[:user_id]) if session[:user_id]
@@ -28,7 +33,7 @@ class ApplicationController < ActionController::Base
       redirect_to login_url
     end
   end
-  
+  # id1のユーザーのみアクセス可
   def logged_in_user_only
     if current_user.id == 1
       store_location

@@ -24,9 +24,9 @@
           <td><%= l(day.worked_on.to_date, format: :long) %></td>
           <td><%= day.log_started_at.strftime("%H:%M") if day.log_started_at.present? %></td>
           <td><%= day.log_finished_at.strftime("%H:%M") if day.log_finished_at.present? %></td>
-          <td><%= day.after_started_at.strftime("%H:%M") if day.after_started_at.present?%></td>
-          <td><%= day.after_finished_at.strftime("%H:%M") if day.after_finished_at.present? %></td>
-          <td><%= day.confirmation_attendance %></td>
+          <td><%= day.log_after_started_at.strftime("%H:%M") if day.log_after_started_at.present?%></td>
+          <td><%= day.log_after_finished_at.strftime("%H:%M") if day.log_after_finished_at.present? %></td>
+          <td><%= day.log_confirmation %></td>
           <td><%= day.log_approval.to_date if day.log_approval.present? %></td>
         </tr>
       <% end %>

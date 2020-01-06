@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   
   before_action :set_user, only: [:show, :edit, :update, :destroy, :log_edit, :show_view_only, :edit_overtime_notice]
   before_action :logged_in_user, only: [:show, :edit, :update, :destroy]
+  before_action :current_user_only, only: [:show]
   before_action :logged_in_user_only, only: [:show]
   before_action :correct_user, only: :edit   #updateを追加するとusers/index.html.erbの編集が出来なくなる
   before_action :admin_user, only: [:destroy, :index]
@@ -146,11 +147,15 @@ class UsersController < ApplicationController
      attendance = Attendance.find(id)
      attendance.update_attributes(item)
      if attendance.change_checkbox == true
-       attendance[:started_at] = attendance.after_started_at
-       attendance[:finished_at] = attendance.after_finished_at
-       attendance.save
+
+       
        if attendance.approval_attendance == "承認"
        attendance[:log_approval] = Time.current
+       attendance[:started_at] = attendance.after_started_at
+       attendance[:finished_at] = attendance.after_finished_at
+       attendance[:log_after_started_at] = attendance.after_started_at
+       attendance[:log_after_finished_at] = attendance.after_finished_at
+       attendance[:log_confirmation] = attendance.confirmation_attendance
        attendance.save
        
        # 申請ログの仕様
@@ -183,6 +188,7 @@ class UsersController < ApplicationController
   
   # CSV出力
   def users_csv
+  
     csv_date = CSV.generate do |csv|
       csv_column_names = ["日付","出社時間","退社時間"]
       csv << csv_column_names
@@ -230,6 +236,8 @@ class UsersController < ApplicationController
       end
     end
     send_data(csv_date,filename: "users_test.csv")
+    
+      
   end
   
   
