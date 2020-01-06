@@ -12,9 +12,10 @@
  *
  *= require_tree .
  *= require_self
+ *= require validationEngine.jquery
  */
  
-@import "bootstrap-sprockets";
+ @import "bootstrap-sprockets";
 @import "bootstrap";
 
 .datetime_select-class {
