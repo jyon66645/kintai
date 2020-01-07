@@ -21,8 +21,7 @@ gem 'roo'
 gem 'rounding'
 
 group :development, :test do
-  #gem 'sqlite3', '1.3.13'
-  gem 'sqlite3'
+  gem 'sqlite3', '1.3.13'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
 
@@ -34,10 +33,8 @@ group :development do
 end
 
 group :production do
-  gem 'pg'
+  gem 'pg', '0.20.0'
 end
-
-
 
 # Windows環境ではtzinfo-dataというgemを含める必要があります
 # Mac環境でもこのままでOKです
