@@ -1,8 +1,7 @@
 <% provide(:title, @user.name) %>
 <h1><%= @user.name %></h1>
 <h1>テスト</h1>
-<h1>テスト</h1>
-<h1>テスト</h1>
+
 
 
 <div>
@@ -118,7 +117,7 @@
     </thead>
     
     <tbody>
-      <% @attendances.each do |day| %>
+      <% @attendances.order(:worked_on).each do |day| %>
         <tr>
           <td><%= link_to "残業申請", user_edit_overtime_path(current_user, day, params: { day: day.worked_on, wday: $days_of_the_week[day.worked_on.wday] }), remote: true, class: "btn btn-primary" %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
