@@ -44,11 +44,18 @@ class AttendancesController < ApplicationController
       after_attendances_params.each do |id, item|
         attendance = Attendance.find(id)
         attendance.update_attributes!(item)
-        if attendance.tomorrow?
-          attendance.after_finished_at.tomorrow if attendance.after_finished_at.present?
-          attendance.update_attributes(approval_attendance: "申請中")
+        if attendance.confirmation_attendance.nil?
+          attendance[:after_started_at] = attendance.log_started_at
+          attendance[:after_finished_at] = attendance.log_finished_at
+          flash[:danger] = "指示者確認が空白です"
+          redirect_to user_url(date: params[:date])
         else
-          attendance.update_attributes(approval_attendance: "申請中")
+          if attendance.tomorrow?
+            attendance.after_finished_at.tomorrow if attendance.after_finished_at.present?
+            attendance.update_attributes(approval_attendance: "申請中")
+          else
+            attendance.update_attributes(approval_attendance: "申請中")
+          end
         end
       end
     end

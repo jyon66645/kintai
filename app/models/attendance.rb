@@ -18,7 +18,7 @@ class Attendance < ApplicationRecord
   validate :after_finished_at_nesessary
   validate :finished_at_is_invalid_without_a_started_at
   validate :confirmation_attendance_validate
-  #validate :confirmation_attendance_validate_plus
+  # validate :confirmation_attendance_validate_plus
   validate :test_test
 
   def finish_schedule_time_validate
