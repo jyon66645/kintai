@@ -37,20 +37,16 @@ class AttendancesController < ApplicationController
   
   # 勤怠編集画面
   def edit_one_month
+     @user = User.find(params[:id])
   end
   
   def update_one_month
+    @user = User.find(params[:id])
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       after_attendances_params.each do |id, item|
         attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
-        if attendance.confirmation_attendance.blank?
-          attendance[:confirmation_attendance] = "空欄の場合"
-          attendance[:after_started_at] = attendance.log_after_started_at
-          attendance[:after_finished_at] = attendance.log_after_finished_at
-          attendance.save
-          flash[:info] = "注意:指示者が空欄の欄は更新しません"
-        else
+        unless params[:user][:attendances][attendance.id.to_s][:confirmation_attendance].blank?
+          attendance.update_attributes!(item)
           if attendance.tomorrow?
             attendance.after_finished_at.tomorrow if attendance.after_finished_at.present?
             attendance.update_attributes(approval_attendance: "申請中")
@@ -58,7 +54,9 @@ class AttendancesController < ApplicationController
             attendance.update_attributes(approval_attendance: "申請中")
             attendance
           end
-        end
+        else
+          flash[:info] = "注意:指示者確認が空欄の日付は更新されません"
+        end  
       end
     end
      flash[:success] = "1ヶ月分の勤怠情報を申請しました。"

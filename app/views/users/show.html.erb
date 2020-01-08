@@ -1,6 +1,5 @@
 <% provide(:title, @user.name) %>
 <h1><%= @user.name %></h1>
-<h1>テスト</h1>
 
 
 
@@ -162,11 +161,9 @@
           <td><%= day.business_process %></td> <!-- 業務処理内容 -->
           <td>
             <%= "残業:#{day.approval}:#{name_change(day.confirmation)}" if day.confirmation.present? %><br>
-            <% if day.confirmation_attendance == "空欄の場合" && day.confirmation_attendance.present? %>
-              <%= "勤怠:#{day.approval_attendance}:#{day.log_confirmation}" if day.approval_attendance.present? && day.confirmation_attendance.present? %>
-            <% else %>
-              <%= "勤怠:#{day.approval_attendance}:#{day.confirmation_attendance}" if day.approval_attendance.present? && day.confirmation_attendance.present? %>
-            <% end %>
+            <%= "勤怠:#{day.approval_attendance}:#{day.confirmation_attendance}" if day.approval_attendance.present? && day.confirmation_attendance == "上長1" %>
+            <%= "勤怠:#{day.approval_attendance}:#{day.confirmation_attendance}" if day.approval_attendance.present? && day.confirmation_attendance == "上長2" %>
+          </td> <!-- 指示者確認㊞ -->
         </tr>
         <% end %>
     </tbody>
