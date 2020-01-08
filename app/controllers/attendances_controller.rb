@@ -44,17 +44,19 @@ class AttendancesController < ApplicationController
       after_attendances_params.each do |id, item|
         attendance = Attendance.find(id)
         attendance.update_attributes!(item)
-        if attendance.confirmation_attendance.nil?
-          attendance[:after_started_at] = attendance.log_started_at
-          attendance[:after_finished_at] = attendance.log_finished_at
-          flash[:danger] = "指示者確認が空白です"
-          redirect_to user_url(date: params[:date])
+        if attendance.confirmation_attendance.blank?
+          attendance[:confirmation_attendance] = "空欄の場合"
+          attendance[:after_started_at] = attendance.log_after_started_at
+          attendance[:after_finished_at] = attendance.log_after_finished_at
+          attendance.save
+          flash[:info] = "注意:指示者が空欄の欄は更新しません"
         else
           if attendance.tomorrow?
             attendance.after_finished_at.tomorrow if attendance.after_finished_at.present?
             attendance.update_attributes(approval_attendance: "申請中")
           else
             attendance.update_attributes(approval_attendance: "申請中")
+            attendance
           end
         end
       end
@@ -119,7 +121,7 @@ class AttendancesController < ApplicationController
   end
   
   def after_attendances_params
-    params.require(:user).permit(attendances: [:after_started_at, :after_finished_at, :after_note, :tomorrow, :confirmation_attendance, :approval_attendance])[:attendances]
+    params.require(:user).permit(attendances: [:after_started_at, :after_finished_at, :after_note, :tomorrow, :approval_attendance, :confirmation_attendance])[:attendances]
   end
   
    # 所属長承認用

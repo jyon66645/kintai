@@ -12,7 +12,7 @@ class CreateAttendances < ActiveRecord::Migration[5.1]
       t.string :confirmation
       t.string :approval, default: "申請中"
       t.boolean :change_checkbox
-      t.string :approval_attendance, default: "申請中"
+      t.string :approval_attendance
       t.string :confirmation_attendance
       t.datetime :after_started_at
       t.datetime :after_finished_at
