@@ -204,7 +204,7 @@
   </table>
 </div>
 
-
+<%= link_to "基本情報編集", edit_basic_info_user_path(current_user), remote: true, class: "btn btn-success" %>
 <!--モーダルウインドウ表示-->
 
 <div id="edit-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
@@ -214,3 +214,5 @@
 <div id="edit-attendance-apply" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <!--所属長承認申請-->
 <div id="edit-zokucho" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div id="edit-basic-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
