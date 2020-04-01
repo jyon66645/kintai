@@ -9,13 +9,13 @@
     </tr>
   </thead>
   <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <% if user.attendances.find_by(worked_on: Date.today).try(:started_at).present? && user.attendances.find_by(worked_on: Date.today).try(:finished_at).blank? %>
-        <td><%= user.employee_number %></td>
-        <td><%= user.name %></td>
-        <% end %>
-      </tr>
+    <% @attendance.each do |attendance| %>
+      <% User.where(id: attendance.user_id).each do |user|  %>
+        <tr>
+          <th><%= user.employee_number %></th>
+          <th><%= user.name %></th>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

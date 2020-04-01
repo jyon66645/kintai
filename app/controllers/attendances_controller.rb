@@ -31,8 +31,7 @@ class AttendancesController < ApplicationController
   end
   
   def working_users
-    @users = User.all
-    @attendances.find_by(worked_on: Date.current)
+    @attendance = Attendance.where.not(started_at: nil).where(finished_at: nil)
   end
   
   # 勤怠編集画面
