@@ -91,7 +91,6 @@ GEM
       net-smtp
     method_source (1.0.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.5)
     minitest (5.20.0)
     net-imap (0.3.7)
       date
@@ -103,8 +102,7 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.13.10)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.13.10-x86_64-darwin)
       racc (~> 1.4)
     pg (1.5.4)
     puma (3.12.6)
@@ -193,7 +191,7 @@ GEM
     will_paginate (4.0.0)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-21
 
 DEPENDENCIES
   bcrypt
@@ -222,5 +220,8 @@ DEPENDENCIES
   web-console (>= 3.3.0)
   will_paginate
 
+RUBY VERSION
+   ruby 2.6.8p205
+
 BUNDLED WITH
-   1.17.2
+   2.4.22
